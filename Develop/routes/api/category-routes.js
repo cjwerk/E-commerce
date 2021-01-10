@@ -27,7 +27,7 @@ router.get('/:id', (req, res) => {
     {
       include: {
         model: Product,
-        attributes: ['category_name']
+        attributes: ['category_id']
       }
     }
   ) .then(categoryData => res.json(categoryData))
@@ -53,31 +53,32 @@ router.put('/:id', (req, res) => {
   // update a category by its `id` value
   Category.update(
     {
-      category_name: req.body.category_name,
-    }, 
+      category_name: req.body.category_name
+    },
     {
       where: {
-        id: req.parms.id
+        id: req.params.id
       }
-    }
-  )
-  .then(categoryData => {
-    if (!categoryData) {
-      res.status(404).json({message: 'No category found :('});
-      return;
-    }
-    res.json(categoryData)
-  })
-  .catch(err => {
-    console.log(err);
-    res.status(500).json(err);
-  });
+    })
+    .then(categoryData => {
+      if (!categoryData) {
+        res.status(404).json({ message: 'No Category found with that ID.' });
+        return;
+      }
+      res.json(categoryData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
 });
 
 router.delete('/:id', (req, res) => {
   // delete a category by its `id` value
   Category.destroy({
+    where: {
     id: req.params.id
+    }
   })
   .then(categoryData => {
     if (!categoryData) {
